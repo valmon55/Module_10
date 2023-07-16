@@ -2,11 +2,11 @@
 {
     public interface ISum /*ISum<T> where T : Int32, Double,Decimal*/
     {
-        int Sum(int a, int b);
+        double Sum(double a, double b);
     }
     public class Calculator : ISum
     {
-        public int Sum(int a, int b)
+        public double Sum(double a, double b)
         {
             Console.WriteLine($"Результат = {a + b}");
             return (a + b);
@@ -14,16 +14,16 @@
     }
     public class Keyboard
     {
-        public int a { get; private set; }
-        public int b { get; private set; }
+        public double a { get; private set; }
+        public double b { get; private set; }
 
-        public delegate int TwoNumEnter(int a, int b);
-        //public Func<int, int, int> TwoNumEnter; //??
+        public delegate double TwoNumEnter(double a, double b);
+
         public event TwoNumEnter TwoNumEnterEvent;
 
         public void GetTwoNumbers()
         {
-            while (true /*(Console.ReadKey()).Key != ConsoleKey.Escape*/)
+            while (true)
             {
                 try
                 {
@@ -37,10 +37,10 @@
                 }
             }
         }
-        public int NumberEntered()
+        public double NumberEntered()
         {
             Console.Write("Введите число: ");
-            return Convert.ToInt32(Console.ReadLine());
+            return Convert.ToDouble(Console.ReadLine());
         }
     }
     class Program
@@ -52,16 +52,6 @@
             keyboard.TwoNumEnterEvent += calc.Sum;
 
             keyboard.GetTwoNumbers();
-
-
-            //try
-            //{
-            //    Console.WriteLine($"Результат = { calc.Sum(keyboard.NumberEntered(), keyboard.NumberEntered())}");
-            //}
-            //catch(Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
 
             Console.ReadKey();
         }
