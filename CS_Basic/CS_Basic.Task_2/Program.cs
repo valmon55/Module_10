@@ -73,13 +73,11 @@
                 catch (Exception ex)
                 {
                     logger.Error(ex.Message);
-                    //Console.WriteLine(ex.Message);
                 }
             }
         }
         public double NumberEntered(ILogger logger)
         {
-            //Console.Write("Введите число: ");
             logger.Query("Введите число: ");
             return Convert.ToDouble(Console.ReadLine());
         }
