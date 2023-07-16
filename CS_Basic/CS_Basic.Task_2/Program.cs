@@ -4,6 +4,7 @@
     {
         void Event(string message);
         void Error(string message);
+        void Query(string message);
     }
     public class Logger : ILogger
     {
@@ -12,10 +13,14 @@
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(message);
         }
-
         public void Event(string message)
         {
             Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(message);
+        }
+        public void Query(string message) 
+        {
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(message);
         }
     }
@@ -36,12 +41,18 @@
         public double Sum(double a, double b)
         {
             logger.Event($"Результат = {a + b}");
-            Console.WriteLine($"Результат = {a + b}");
+            //Console.WriteLine($"Результат = {a + b}");
             return (a + b);
         }
     }
     public class Keyboard
     {
+        ILogger logger { get; }
+
+        public Keyboard(ILogger logger)
+        {
+            this.logger = logger;
+        }
         public double a { get; private set; }
         public double b { get; private set; }
 
@@ -49,25 +60,27 @@
 
         public event TwoNumEnter TwoNumEnterEvent;
 
-        public void GetTwoNumbers()
+        public void GetTwoNumbers(ILogger logger)
         {
             while (true)
             {
                 try
                 {
-                    a = NumberEntered();
-                    b = NumberEntered();
+                    a = NumberEntered(logger);
+                    b = NumberEntered(logger);
                     TwoNumEnterEvent?.Invoke(a, b);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    logger.Error(ex.Message);
+                    //Console.WriteLine(ex.Message);
                 }
             }
         }
-        public double NumberEntered()
+        public double NumberEntered(ILogger logger)
         {
-            Console.Write("Введите число: ");
+            //Console.Write("Введите число: ");
+            logger.Query("Введите число: ");
             return Convert.ToDouble(Console.ReadLine());
         }
     }
@@ -75,11 +88,12 @@
     {
         static void Main(string[] args)
         {
-            Calculator calc = new Calculator();
-            Keyboard keyboard = new Keyboard();
+            ILogger logger = new Logger();
+            Calculator calc = new Calculator(logger);
+            Keyboard keyboard = new Keyboard(logger);
             keyboard.TwoNumEnterEvent += calc.Sum;
 
-            keyboard.GetTwoNumbers();
+            keyboard.GetTwoNumbers(logger);
 
             Console.ReadKey();
         }
