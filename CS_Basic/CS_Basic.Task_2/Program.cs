@@ -60,14 +60,14 @@
 
         public event TwoNumEnter TwoNumEnterEvent;
 
-        public void GetTwoNumbers(ILogger logger)
+        public void GetTwoNumbers()
         {
             while (true)
             {
                 try
                 {
-                    a = NumberEntered(logger);
-                    b = NumberEntered(logger);
+                    a = NumberEntered();
+                    b = NumberEntered();
                     TwoNumEnterEvent?.Invoke(a, b);
                 }
                 catch (Exception ex)
@@ -76,7 +76,7 @@
                 }
             }
         }
-        public double NumberEntered(ILogger logger)
+        public double NumberEntered()
         {
             logger.Query("Введите число: ");
             return Convert.ToDouble(Console.ReadLine());
@@ -91,7 +91,7 @@
             Keyboard keyboard = new Keyboard(logger);
             keyboard.TwoNumEnterEvent += calc.Sum;
 
-            keyboard.GetTwoNumbers(logger);
+            keyboard.GetTwoNumbers();
 
             Console.ReadKey();
         }
