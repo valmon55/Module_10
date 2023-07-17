@@ -85,7 +85,7 @@
         {
             precision = 0;
             logger.Query("Введите число: ");
-            string s = Console.ReadLine();
+            string? s = Console.ReadLine();
             string[] l = s.Split(",",StringSplitOptions.TrimEntries);
             precision = l.Length > 1 ? l[1].Length : 0;
             return Convert.ToDouble(s);
