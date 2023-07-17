@@ -41,7 +41,6 @@
         public double Sum(double a, double b, int precision)
         {
             logger.Event($"Результат = {Math.Round(a + b, precision)}");
-            //Console.WriteLine($"Результат = {a + b}");
             return (a + b);
         }
     }
