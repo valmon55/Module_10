@@ -27,7 +27,7 @@
 
     public interface ISum 
     {
-        double Sum(double a, double b);
+        double Sum(double a, double b, int precision);
     }
     public class Calculator : ISum
     {
@@ -38,9 +38,9 @@
             this.logger = logger;
         }
 
-        public double Sum(double a, double b)
+        public double Sum(double a, double b, int precision)
         {
-            logger.Event($"Результат = {a + b}");
+            logger.Event($"Результат = {Math.Round(a + b, precision)}");
             //Console.WriteLine($"Результат = {a + b}");
             return (a + b);
         }
@@ -56,19 +56,25 @@
         public double a { get; private set; }
         public double b { get; private set; }
 
-        public delegate double TwoNumEnter(double a, double b);
+        public int precision { get; private set; }
+
+        public delegate double TwoNumEnter(double a, double b, int precision);
 
         public event TwoNumEnter TwoNumEnterEvent;
 
         public void GetTwoNumbers()
         {
+            int prec_a;
+            int prec_b;
+            int max_prec;
             while (true)
             {
                 try
                 {
-                    a = NumberEntered();
-                    b = NumberEntered();
-                    TwoNumEnterEvent?.Invoke(a, b);
+                    a = NumberEntered(out prec_a);
+                    b = NumberEntered(out prec_b);
+                    max_prec = prec_a > prec_b ? prec_a : prec_b;
+                    TwoNumEnterEvent?.Invoke(a, b, max_prec);
                 }
                 catch (Exception ex)
                 {
@@ -76,10 +82,14 @@
                 }
             }
         }
-        public double NumberEntered()
+        public double NumberEntered(out int precision)
         {
+            precision = 0;
             logger.Query("Введите число: ");
-            return Convert.ToDouble(Console.ReadLine());
+            string s = Console.ReadLine();
+            string[] l = s.Split(",",StringSplitOptions.TrimEntries);
+            precision = l.Length > 1 ? l[1].Length : 0;
+            return Convert.ToDouble(s);
         }
     }
     class Program
